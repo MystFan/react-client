@@ -10,28 +10,24 @@ import {
 } from "baseui/table-semantic";
 
 import IProduct from '../../models/product.model';
-import * as ProductActions  from '../../store/products/product.actions';
+import * as ProductActions from '../../store/products/product.actions';
 import { AppState } from '../../store/appState';
 import { Avatar } from 'baseui/avatar';
 
 type ProductListProps = {
     products: IProduct[],
-    actions: ProductActions.IProductAction
+    actions: {
+        loadProducts: Function
+    }
 };
 
 const ProductList = (props: ProductListProps) => {
     const dispatch = useDispatch();
 
-    function handleAddProducts(){
-        dispatch(ProductActions.addProduct({ id: 229, name: 'Test', price: 10, image: "https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" }));
-    }
-
-    function handleRemoveProducts(){
-        dispatch(ProductActions.removeProduct({ id: 229, name: 'Test', price: 10, image: "https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" }));
-    }
-
     useEffect(() => {
-        props.actions.getProducts();
+        if (props.products.length === 0) {
+            props.actions.loadProducts();
+        }
     }, [])
 
     return (
@@ -91,13 +87,15 @@ function NumberCell({ value }: { value: number; }) {
 
 function mapStateToProps(state: AppState, ownProps: any) {
     return {
-        products: state.products.all
+        products: state.products.all.length === 0 ? [] : state.products.all
     };
 }
 
 function mapDispatchToProps(dispatch: any) {
     return {
-        actions: bindActionCreators(ProductActions, dispatch)
+        actions: {
+            loadProducts: bindActionCreators(ProductActions.getProducts, dispatch)
+        }
     };
 }
 

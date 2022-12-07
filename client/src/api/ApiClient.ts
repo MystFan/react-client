@@ -4,17 +4,6 @@ const { REACT_APP_API_URL } = process.env;
 import { ApiConfiguration } from './ApiConfiguration';
 import { IApiClient } from './IApiClient';
 
-Axios.interceptors.response.use(
-    res => {
-        debugger
-        return res;
-    },
-    err => {
-        console.log(err);
-        throw new Error(err.response.data.message);
-    }
-)
-
 const apiConfiguration: ApiConfiguration = { baseUrl: REACT_APP_API_URL };
 
 const createAxiosClient = (apiConfiguration: ApiConfiguration): AxiosInstance => {

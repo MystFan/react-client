@@ -7,7 +7,7 @@ export interface IProductAction {
     addProduct(payload: IProduct): IAction<string, IProduct>,
     removeProduct(payload: IProduct): IAction<string, IProduct>,
     loadProducts(payload: IProduct[]): IAction<string, IProduct[]>,
-    getProducts(): any
+    getProducts(): Promise<void>
 }
 
 export const addProduct = (payload: IProduct) => createAction(

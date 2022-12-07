@@ -8,6 +8,7 @@ import Layout from './app/layout/Layout';
 import Login from './features/users/Login';
 
 import './App.css';
+import RouteGuard from './app/common/RouteGuard';
 
 const engine = new Styletron();
 
@@ -18,7 +19,9 @@ function App() {
         <Router>
           <Routes>
             <Route path="login" element={<Login />}></Route>
-            <Route path="*" element={<Layout />}></Route>
+            <Route element={<RouteGuard />}>
+              <Route path="*" element={<Layout />}></Route>
+            </Route> 
           </Routes>
         </Router>
       </BaseProvider>
