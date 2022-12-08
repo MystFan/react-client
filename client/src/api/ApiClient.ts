@@ -1,51 +1,30 @@
-import Axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import IApiClient from './IApiClient';
+import IHttpClient from './HttpClient';
+import IProduct from '../models/product.model';
+import IUser, { IUserLogin } from '../models/user.model';
+import initialState from "../store/appState";
 
-const { REACT_APP_API_URL } = process.env;
-import { ApiConfiguration } from './ApiConfiguration';
-import { IApiClient } from './IApiClient';
+export const loadProducts = async (): Promise<IProduct[]> => {
+    const response = await IHttpClient.get<IProduct[]>("product");
+    return response;
+}
 
-const apiConfiguration: ApiConfiguration = { baseUrl: REACT_APP_API_URL };
-
-const createAxiosClient = (apiConfiguration: ApiConfiguration): AxiosInstance => {
-    return Axios.create({
-        baseURL: apiConfiguration.baseUrl,
-        responseType: 'json' as const,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        timeout: 10 * 1000,
+export const login = async (login: IUserLogin): Promise<IUser> => {
+    const response = new Promise<IUser>((resolve, reject) => {
+        const user: IUser = initialState.users.user;
+        if (user) {
+            resolve(user);
+        } else {
+            reject();
+        }
     });
+
+    return response;
 }
 
-const client: AxiosInstance = createAxiosClient(apiConfiguration);
-
-export const post = async <TRequest, TResponse>(path: string, payload: TRequest, config?: AxiosRequestConfig): Promise<TResponse> => {
-    const response = config
-        ? await client.post<TResponse>(path, payload, config)
-        : await client.post<TResponse>(path, payload);
-    return response.data;
+const ApiClient: IApiClient = {
+    loadProducts,
+    login
 }
 
-export const patch = async<TRequest, TResponse>(path: string, payload: TRequest): Promise<TResponse> => {
-    const response = await client.patch<TResponse>(path, payload);
-    return response.data;
-}
-
-export const put = async<TRequest, TResponse>(path: string, payload: TRequest): Promise<TResponse> => {
-    const response = await client.put<TResponse>(path, payload);
-    return response.data;
-}
-
-export const get = async<TResponse>(path: string): Promise<TResponse> => {
-    const response = await client.get<TResponse>(path);
-    return response.data;
-}
-
-const HttpClient: IApiClient = {
-    get: get,
-    post: post,
-    put: put,
-    patch: patch
-}
-
-export default HttpClient;
+export default ApiClient;

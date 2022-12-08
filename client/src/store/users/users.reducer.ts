@@ -9,10 +9,10 @@ export type UsersState = {
 
 const usersReducer = (state: UsersState = initialState.users, action: IAction<string, any>): UsersState => {
     switch (action.type) {
-        case ActionNames.AUTH_USER:
+        case ActionNames.LOGIN_USER:
             return {
                 ...state,
-                user: { ...state.user, isAuth: action.payload }
+                user: { ...state.user, isAuth: action.payload.isAuth }
             }
     }
 

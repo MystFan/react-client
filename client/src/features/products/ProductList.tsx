@@ -26,7 +26,7 @@ const ProductList = (props: ProductListProps) => {
 
     useEffect(() => {
         if (props.products.length === 0) {
-            props.actions.loadProducts();
+           dispatch(props.actions.loadProducts());
         }
     }, [])
 

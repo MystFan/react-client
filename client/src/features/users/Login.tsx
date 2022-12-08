@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { bindActionCreators } from "redux";
+import { connect, useDispatch } from "react-redux";
 
 import {
     Card,
@@ -12,10 +14,10 @@ import { Button } from "baseui/button";
 import { styled } from "baseui";
 import { Input } from "baseui/input";
 
-import IUserLogin from "../../models/user.login.model";
+import IUser, { IUserLogin } from "../../models/user.model";
 import IFormError from "../../models/form.error.model";
 import * as UserActions from '../../store/users/user.actions';
-import { useDispatch } from "react-redux";
+import { AppState } from "../../store/appState";
 
 const login: IUserLogin = {
     username: "",
@@ -24,11 +26,18 @@ const login: IUserLogin = {
 
 const errors: IFormError[] = [];
 
-const Login = () => {
+type LoginProps = {
+    user: IUser
+    actions: {
+        loginUser: Function
+    }
+}
+
+const Login = (props: LoginProps) => {
     const [userLogin, setUserLogin] = useState(login);
     const [loginErrors, setLoginErrors] = useState(errors);
-    const navigate = useNavigate();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleChange = (event: any) => {
         const { name, value } = event.target;
@@ -38,7 +47,7 @@ const Login = () => {
     }
 
     const handleSubmit = () => {
-        dispatch(UserActions.authUser(true));
+        dispatch(props.actions.loginUser(userLogin));
         navigate("/");
     }
 
@@ -62,7 +71,8 @@ const Login = () => {
                     </StyledTitle>
                     <StyledBody>
                         <FormControl
-                            label={() => "Username"}>
+                            label={() => "Username"}
+                            error={loginErrors.map(e => e.message).join("")}>
                             <Input name="username" onChange={handleChange} value={userLogin.username}/>
                          </FormControl>
                          <FormControl
@@ -86,8 +96,6 @@ const Login = () => {
     )
 }
 
-export default Login;
-
 const LoginHeader = styled('header', {
     textAlign: 'center',
     width: '100%'
@@ -101,3 +109,20 @@ const LoginWrapper = styled('section', {
     background: '#363740',
     zIndex: '1'
 });
+
+function mapStateToProps(state: AppState) {
+    return { user: state.users.user };
+}
+
+function mapDispatchToProps(dispatch: any) {
+    return {
+        actions: {
+            loginUser: bindActionCreators(UserActions.login, dispatch)
+        }
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+) (Login);

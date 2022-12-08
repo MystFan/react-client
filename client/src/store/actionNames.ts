@@ -5,5 +5,5 @@ export enum ActionNames {
     UPDATE_PRODUCT = "UPDATE_PRODUCT",
     GET_PRODUCT = "GET_PRODUCT",
 
-    AUTH_USER = "AUTH_USER"
+    LOGIN_USER = "LOGIN_USER"
 }

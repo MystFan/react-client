@@ -1,6 +1,7 @@
-export interface IApiClient {
-    post<TRequest, TResponse>(path: string, object: TRequest, config?: any): Promise<TResponse>;
-    patch<TRequest, TResponse>(path: string, object: TRequest): Promise<TResponse>;
-    put<TRequest, TResponse>(path: string, object: TRequest): Promise<TResponse>;
-    get<TResponse>(path: string): Promise<TResponse>;
+import IProduct from "../models/product.model";
+import IUser, { IUserLogin } from "../models/user.model";
+
+export default interface IApiClient {
+    loadProducts(): Promise<IProduct[]>
+    login(login: IUserLogin): Promise<IUser>
 }

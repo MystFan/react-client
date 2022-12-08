@@ -47,7 +47,8 @@ const initialState: AppState = {
             id: 0,
             name: "",
             tenantId: undefined,
-            isAuth: false
+            isAuth: true,
+            token: undefined
         }
     }
 }
