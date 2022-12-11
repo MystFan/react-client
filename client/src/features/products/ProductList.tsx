@@ -10,15 +10,13 @@ import {
 } from "baseui/table-semantic";
 
 import IProduct from '../../models/product.model';
-import * as ProductActions from '../../store/products/product.actions';
+import ProductActions from '../../store/products/product.actions';
 import { AppState } from '../../store/appState';
 import { Avatar } from 'baseui/avatar';
 
 type ProductListProps = {
     products: IProduct[],
-    actions: {
-        loadProducts: Function
-    }
+    loadProducts: Function
 };
 
 const ProductList = (props: ProductListProps) => {
@@ -26,7 +24,7 @@ const ProductList = (props: ProductListProps) => {
 
     useEffect(() => {
         if (props.products.length === 0) {
-           dispatch(props.actions.loadProducts());
+            props.loadProducts();
         }
     }, [])
 
@@ -87,19 +85,17 @@ function NumberCell({ value }: { value: number; }) {
 
 function mapStateToProps(state: AppState, ownProps: any) {
     return {
-        products: state.products.all.length === 0 ? [] : state.products.all
+        products: state.productState.products.length === 0 ? [] : state.productState.products
     };
 }
 
 function mapDispatchToProps(dispatch: any) {
     return {
-        actions: {
-            loadProducts: bindActionCreators(ProductActions.getProducts, dispatch)
-        }
+        loadProducts: bindActionCreators(ProductActions.loadProducts, dispatch) 
     };
 }
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-) (ProductList);
+)(ProductList);

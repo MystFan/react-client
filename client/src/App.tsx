@@ -6,9 +6,10 @@ import { LightTheme, BaseProvider } from 'baseui';
 
 import Layout from './app/layout/Layout';
 import Login from './features/users/Login';
-
+import UserActions from './store/users/user.actions';
 import './App.css';
-import RouteGuard from './app/common/RouteGuard';
+import RouteGuard from './app/common/components/RouteGuard';
+import { getItemFromStorage } from './app/common/storage';
 
 const engine = new Styletron();
 
@@ -21,7 +22,7 @@ function App() {
             <Route path="login" element={<Login />}></Route>
             <Route element={<RouteGuard />}>
               <Route path="*" element={<Layout />}></Route>
-            </Route> 
+            </Route>
           </Routes>
         </Router>
       </BaseProvider>

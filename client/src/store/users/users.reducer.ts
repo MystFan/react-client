@@ -7,12 +7,23 @@ export type UsersState = {
     user: IUser
 }
 
-const usersReducer = (state: UsersState = initialState.users, action: IAction<string, any>): UsersState => {
+const usersReducer = (state: UsersState = initialState.userState, action: IAction<string, any>): UsersState => {
     switch (action.type) {
         case ActionNames.LOGIN_USER:
             return {
-                ...state,
-                user: { ...state.user, isAuth: action.payload.isAuth }
+                user: { ...state.user, isAuth: !!action.payload.token, token: action.payload.token }
+            }
+        case ActionNames.LOAD_USER:
+            return {
+                user: { ...state.user }
+            }
+        case ActionNames.SAVE_USER:
+            return {
+                user: { ...action.payload }
+            }
+        case ActionNames.LOGOUT_USER:
+            return {
+                user: { id: 0, name: "", tenantId: 0, token: "", isAuth: false }
             }
     }
 

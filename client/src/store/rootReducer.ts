@@ -4,8 +4,8 @@ import productsReducer from "./products/products.reducer"
 import usersReducer from "./users/users.reducer"
 
 const rootReducer = combineReducers({
-    products: productsReducer,
-    users: usersReducer,
+    productState: productsReducer,
+    userState: usersReducer,
 })
 
 export default rootReducer

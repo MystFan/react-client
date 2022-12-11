@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 import { bindActionCreators } from "redux";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 
 import {
     Card,
@@ -16,7 +16,7 @@ import { Input } from "baseui/input";
 
 import IUser, { IUserLogin } from "../../models/user.model";
 import IFormError from "../../models/form.error.model";
-import * as UserActions from '../../store/users/user.actions';
+import UserActions from '../../store/users/user.actions';
 import { AppState } from "../../store/appState";
 
 const login: IUserLogin = {
@@ -28,27 +28,33 @@ const errors: IFormError[] = [];
 
 type LoginProps = {
     user: IUser
-    actions: {
-        loginUser: Function
-    }
+    loginUser: Function,
+    loadUser: Function
 }
 
 const Login = (props: LoginProps) => {
     const [userLogin, setUserLogin] = useState(login);
-    const [loginErrors, setLoginErrors] = useState(errors);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const handleChange = (event: any) => {
         const { name, value } = event.target;
         setUserLogin((prevState: IUserLogin) => {
-             return { ...prevState, [name]: value }
+            return { ...prevState, [name]: value }
         })
     }
 
-    const handleSubmit = () => {
-        dispatch(props.actions.loginUser(userLogin));
-        navigate("/");
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
+        props.loginUser(userLogin);
+    }
+
+    useEffect(() => {
+        if (props.user.token) {
+            props.loadUser()
+        }
+    }, [props.user.token])
+
+    if (props.user.isAuth) {
+        return <Navigate to="/" />
     }
 
     return (
@@ -71,15 +77,14 @@ const Login = (props: LoginProps) => {
                     </StyledTitle>
                     <StyledBody>
                         <FormControl
-                            label={() => "Username"}
-                            error={loginErrors.map(e => e.message).join("")}>
-                            <Input name="username" onChange={handleChange} value={userLogin.username}/>
-                         </FormControl>
-                         <FormControl
-                            label={() => "Password"}
-                            error={loginErrors.map(e => e.message).join("")}>
-                            <Input name="password" onChange={handleChange} type="password" value={userLogin.password}/>
-                         </FormControl>
+                            label={() => "Username"}>
+                            <Input autoFocus={true}
+                                required name="username" onChange={handleChange} value={userLogin.username} />
+                        </FormControl>
+                        <FormControl
+                            label={() => "Password"}>
+                            <Input name="password" onChange={handleChange} type="password" value={userLogin.password} />
+                        </FormControl>
                     </StyledBody>
                     <StyledAction>
                         <Button
@@ -111,18 +116,19 @@ const LoginWrapper = styled('section', {
 });
 
 function mapStateToProps(state: AppState) {
-    return { user: state.users.user };
+    return {
+        user: state.userState.user
+    };
 }
 
 function mapDispatchToProps(dispatch: any) {
     return {
-        actions: {
-            loginUser: bindActionCreators(UserActions.login, dispatch)
-        }
+        loginUser: bindActionCreators(UserActions.login, dispatch),
+        loadUser: bindActionCreators(UserActions.loadUserFromStore, dispatch)
     };
 }
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-) (Login);
+)(Login);

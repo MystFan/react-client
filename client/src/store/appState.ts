@@ -1,15 +1,18 @@
+import { getItemFromStorage } from "../app/common/storage";
 import { ProductsState } from "./products/products.reducer";
 import { UsersState } from "./users/users.reducer";
 
 export type AppState = {
-    products: ProductsState,
-    users: UsersState
+    productState: ProductsState,
+    userState: UsersState
 }
 
+const user = getItemFromStorage("user");
+
 const initialState: AppState = {
-    products: {
-        all: []
-        // all: [
+    productState: {
+        products: []
+        // products: [
         //     {
         //         id: 1,
         //         name: "Contact Email not Linked",
@@ -42,13 +45,13 @@ const initialState: AppState = {
         //     }
         // ]
     },
-    users: {
-        user: {
+    userState: {
+        user: user ? user : {
             id: 0,
             name: "",
-            tenantId: undefined,
-            isAuth: true,
-            token: undefined
+            tenantId: 0,
+            isAuth: false,
+            token: ""
         }
     }
 }

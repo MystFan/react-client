@@ -2,13 +2,16 @@ import {
   configureStore,
   createImmutableStateInvariantMiddleware,
 } from '@reduxjs/toolkit'
-import thunk from 'redux-thunk';
 
+import thunkMiddleware from 'redux-thunk';
+
+import loggerMiddleware from './loggerMiddleware';
 import rootReducer from './rootReducer';
+import userMiddleware from './userMiddleware';
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: [thunk, createImmutableStateInvariantMiddleware()]
+  middleware: [thunkMiddleware, userMiddleware, loggerMiddleware, createImmutableStateInvariantMiddleware()]
 })
 
 export default store

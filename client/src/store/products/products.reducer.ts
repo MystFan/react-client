@@ -4,10 +4,10 @@ import initialState from "../appState"
 import { IAction } from "../createAction"
 
 export type ProductsState = {
-    all: IProduct[]
+    products: IProduct[]
 }
 
-const productsReducer = (state: ProductsState = initialState.products, action: IAction<string, any>): ProductsState => {
+const productsReducer = (state: ProductsState = initialState.productState, action: IAction<string, any>): ProductsState => {
     switch (action.type) {
         case ActionNames.ADD_PRODUCT:
             const newProduct: IProduct = {
@@ -19,16 +19,16 @@ const productsReducer = (state: ProductsState = initialState.products, action: I
 
             return {
                 ...state,
-                all: state.all.concat(newProduct),
+                products: state.products.concat(newProduct),
             }
         case ActionNames.REMOVE_PRODUCT:
-            const updatedProducts: IProduct[] = state.all.filter(
+            const updatedProducts: IProduct[] = state.products.filter(
                 product => product.id !== action.payload.id
             )
 
             return {
                 ...state,
-                all: updatedProducts,
+                products: updatedProducts,
             }
 
         case ActionNames.LOAD_PRODUCTS:
@@ -38,7 +38,7 @@ const productsReducer = (state: ProductsState = initialState.products, action: I
 
             return {
                 ...state,
-                all: products
+                products: products
             }
     }
 
