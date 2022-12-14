@@ -1,6 +1,7 @@
-import ApiClient from "../../api/ApiClient";
+import apiClient from "../../api/ApiClient";
 import IUser, { IUserLogin } from "../../models/user.model";
 import { ActionNames } from "../actionNames"
+import CommonActions from "../common/common.actions";
 import { createAction, IAction } from "../createAction"
 
 type ThunkLoginAction = (userLogin: IUserLogin) => (dispatch: Function, getState: Function) => Promise<void>
@@ -15,8 +16,11 @@ export interface IUserActions {
 
 const login = (userLogin: IUserLogin) => {
     return function (dispatch: Function, getState: Function) {
-        return ApiClient.login(userLogin)
+        dispatch(CommonActions.httpRequestsInStart());
+
+        return apiClient.login(userLogin)
             .then((user: IUser) => {
+                dispatch(CommonActions.httpRequestsInEnd());
                 dispatch(loginUser(user));
                 dispatch(saveUser(user));
             }).catch(err => {

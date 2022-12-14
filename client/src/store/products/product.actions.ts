@@ -1,6 +1,7 @@
 import ApiClient from "../../api/ApiClient"
 import IProduct from "../../models/product.model"
 import { ActionNames } from "../actionNames"
+import CommonActions from "../common/common.actions";
 import { createAction, IAction } from "../createAction"
 
 type ThunkLoadProductsFunction = () => (dispatch: Function, getState: Function) => Promise<void>;
@@ -26,8 +27,10 @@ const loadProducts = (payload: IProduct[]): IAction<ActionNames.LOAD_PRODUCTS, I
 
 const getProducts = () => {
     return function (dispatch: Function, getState: Function) {
+        dispatch(CommonActions.httpRequestsInStart())
         return ApiClient.loadProducts()
             .then((data: IProduct[]) => {
+                dispatch(CommonActions.httpRequestsInEnd())
                 dispatch(loadProducts(data))
             }).catch(err => {
                 throw err;

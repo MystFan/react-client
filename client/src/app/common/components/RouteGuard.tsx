@@ -10,7 +10,6 @@ type RouteGuardProps = {
 
 const RouteGuard = (props: RouteGuardProps) => {
     const loacation = useLocation();
-    console.log(loacation)
     return (
         props.user.isAuth ? <Outlet /> : <Navigate replace to="/login" state={loacation} />
     )

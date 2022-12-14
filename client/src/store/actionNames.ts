@@ -8,5 +8,8 @@ export enum ActionNames {
     LOGIN_USER = "LOGIN_USER",
     LOGOUT_USER = "LOGOUT_USER",
     LOAD_USER = "LOAD_USER",
-    SAVE_USER = "SAVE_USER"
+    SAVE_USER = "SAVE_USER",
+
+    BEGIN_REQUEST = "BEGIN_REQUEST",
+    END_REQUEST = "END_REQUEST",
 }

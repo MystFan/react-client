@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { useStyletron } from 'baseui';
+import { styled, useStyletron } from 'baseui';
 import { FaLightbulb } from 'react-icons/fa';
 import {
     TableBuilder,
@@ -20,8 +20,6 @@ type ProductListProps = {
 };
 
 const ProductList = (props: ProductListProps) => {
-    const dispatch = useDispatch();
-
     useEffect(() => {
         if (props.products.length === 0) {
             props.loadProducts();
@@ -91,7 +89,7 @@ function mapStateToProps(state: AppState, ownProps: any) {
 
 function mapDispatchToProps(dispatch: any) {
     return {
-        loadProducts: bindActionCreators(ProductActions.loadProducts, dispatch) 
+        loadProducts: bindActionCreators(ProductActions.loadProducts, dispatch)
     };
 }
 

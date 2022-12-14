@@ -1,10 +1,10 @@
 import IApiClient from './IApiClient';
-import IHttpClient from './HttpClient';
+import httpClient from './HttpClient';
 import IProduct from '../models/product.model';
 import IUser, { IUserLogin } from '../models/user.model';
 
 export const loadProducts = async (): Promise<IProduct[]> => {
-    const response = await IHttpClient.get<IProduct[]>("product");
+    const response = await httpClient.get<IProduct[]>("product");
     return response;
 }
 

@@ -18,6 +18,7 @@ import IUser, { IUserLogin } from "../../models/user.model";
 import IFormError from "../../models/form.error.model";
 import UserActions from '../../store/users/user.actions';
 import { AppState } from "../../store/appState";
+import Loader from "../../app/common/components/Loader";
 
 const login: IUserLogin = {
     username: "",
@@ -27,7 +28,8 @@ const login: IUserLogin = {
 const errors: IFormError[] = [];
 
 type LoginProps = {
-    user: IUser
+    user: IUser,
+    loading: boolean,
     loginUser: Function,
     loadUser: Function
 }
@@ -59,7 +61,8 @@ const Login = (props: LoginProps) => {
 
     return (
         <>
-            <LoginWrapper>
+            <Loader loading={props.loading}></Loader>
+            {<LoginWrapper>
                 <Card overrides={{
                     Root: {
                         style: {
@@ -96,7 +99,7 @@ const Login = (props: LoginProps) => {
                         </Button>
                     </StyledAction>
                 </Card>
-            </LoginWrapper>
+            </LoginWrapper>}
         </>
     )
 }
@@ -117,7 +120,8 @@ const LoginWrapper = styled('section', {
 
 function mapStateToProps(state: AppState) {
     return {
-        user: state.userState.user
+        user: state.userState.user,
+        loading: state.commonState.httpRequestsInProgress > 0
     };
 }
 

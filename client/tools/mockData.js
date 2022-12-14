@@ -86,6 +86,9 @@ const product = [
 ];
 
 const user = {
+  id: 1,
+  name: "Pesho",
+  tenantId: 1,
   token: "jwtToken",
 };
 

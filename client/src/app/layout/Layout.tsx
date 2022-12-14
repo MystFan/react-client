@@ -5,8 +5,15 @@ import { styled } from 'baseui';
 import Sidebar from './Sidebar';
 import LayoutHeader from './LayoutHeader';
 import LayoutContent from './LayoutContent';
+import { connect } from 'react-redux';
+import { AppState } from '../../store/appState';
+import Loader from '../common/components/Loader';
 
-const Layout = () => {
+type LayoutProps = {
+    loading: boolean
+}
+
+const Layout = (props: LayoutProps) => {
     const [open, setOpen] = useState(false);
 
     const openMenu = (open: boolean) => {
@@ -15,6 +22,7 @@ const Layout = () => {
 
     return (
         <LayoutWrapper>
+            <Loader loading={props.loading}></Loader>
             <Sidebar open={open} setOpen={openMenu} />
             <LayoutHeader title={'Products App'} open={open} setOpen={openMenu} />
             <LayoutContent />
@@ -22,7 +30,16 @@ const Layout = () => {
     )
 }
 
-export default Layout;
+function mapStateToProps(state: AppState, ownProps: any) {
+    return {
+        loading: state.commonState.httpRequestsInProgress > 0
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    null
+)(Layout);
 
 const LayoutWrapper = styled('section', {
     display: 'flex',

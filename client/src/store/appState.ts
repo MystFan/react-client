@@ -1,10 +1,12 @@
 import { getItemFromStorage } from "../app/common/storage";
+import { CommonState } from "./common/common.reducer";
 import { ProductsState } from "./products/products.reducer";
 import { UsersState } from "./users/users.reducer";
 
 export type AppState = {
     productState: ProductsState,
-    userState: UsersState
+    userState: UsersState,
+    commonState: CommonState
 }
 
 const user = getItemFromStorage("user");
@@ -53,6 +55,9 @@ const initialState: AppState = {
             isAuth: false,
             token: ""
         }
+    },
+    commonState: {
+        httpRequestsInProgress: 0
     }
 }
 
