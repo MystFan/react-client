@@ -57,7 +57,8 @@ const initialState: AppState = {
         }
     },
     commonState: {
-        httpRequestsInProgress: 0
+        httpRequestsInProgress: 0,
+        requestErrors: []
     }
 }
 

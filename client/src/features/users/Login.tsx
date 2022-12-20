@@ -15,17 +15,10 @@ import { styled } from "baseui";
 import { Input } from "baseui/input";
 
 import IUser, { IUserLogin } from "../../models/user.model";
-import IFormError from "../../models/form.error.model";
 import UserActions from '../../store/users/user.actions';
 import { AppState } from "../../store/appState";
 import Loader from "../../app/common/components/Loader";
-
-const login: IUserLogin = {
-    username: "",
-    password: ""
-}
-
-const errors: IFormError[] = [];
+import NegativeIcon from "../../app/common/components/NegativeIcon";
 
 type LoginProps = {
     user: IUser,
@@ -35,17 +28,34 @@ type LoginProps = {
 }
 
 const Login = (props: LoginProps) => {
-    const [userLogin, setUserLogin] = useState(login);
+    const [username, setUsername] = useState("");
+    const [isUsernameValid, setUsernameIsValid] = useState(false);
+    const [isUsernameVisited, setUsernameIsVisited] = useState(false);
+    const shouldShowUsernameError = !isUsernameValid && isUsernameVisited;
+
+    const [password, setPassword] = useState("");
+    const [isPasswordValid, setPasswordIsValid] = useState(false);
+    const [isPasswordVisited, setPasswordIsVisited] = useState(false);
+    const shouldShowPasswordError = !isPasswordValid && isPasswordVisited;
 
     const handleChange = (event: any) => {
         const { name, value } = event.target;
-        setUserLogin((prevState: IUserLogin) => {
-            return { ...prevState, [name]: value }
-        })
+        if (name === "username") {
+            setUsernameIsValid(value.length > 0);
+            setUsername(value);
+        } else if (name === "password") {
+            setPasswordIsValid(value.length > 0);
+            setPassword(value);
+        }
     }
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
+        const userLogin: IUserLogin = {
+            username,
+            password
+        }
+
         props.loginUser(userLogin);
     }
 
@@ -79,14 +89,20 @@ const Login = (props: LoginProps) => {
                         <LoginHeader>Welcome</LoginHeader>
                     </StyledTitle>
                     <StyledBody>
-                        <FormControl
-                            label={() => "Username"}>
-                            <Input autoFocus={true}
-                                required name="username" onChange={handleChange} value={userLogin.username} />
+                        <FormControl label="Username" error={shouldShowUsernameError ? 'Please input a valid username' : null}>
+                            <Input name="username"
+                                autoFocus={true}
+                                onBlur={() => setUsernameIsVisited(true)}
+                                error={shouldShowUsernameError}
+                                overrides={shouldShowUsernameError ? { After: NegativeIcon } : {}}
+                                onChange={handleChange} value={username} />
                         </FormControl>
-                        <FormControl
-                            label={() => "Password"}>
-                            <Input name="password" onChange={handleChange} type="password" value={userLogin.password} />
+                        <FormControl label="Password" error={shouldShowPasswordError ? 'Please input a valid password' : null}>
+                            <Input name="password"
+                                onBlur={() => setPasswordIsVisited(true)}
+                                error={shouldShowPasswordError}
+                                overrides={shouldShowPasswordError ? { After: NegativeIcon } : {}}
+                                onChange={handleChange} type="password" value={password} />
                         </FormControl>
                     </StyledBody>
                     <StyledAction>

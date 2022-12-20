@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import { useStyletron } from 'baseui';
 
-import ProductList from '../../features/products/ProductList'
+import Products from '../../features/products/Products'
 import Overview from '../../features/overview/Overview';
 import PageNotFound from '../PageNotFound';
 
@@ -26,7 +26,7 @@ const LayoutContent = (props: LayoutContentProps) => {
         <Routes>
           <Route path="" element={<Overview />}></Route>
           <Route path="overview" element={<Overview />}></Route>
-          <Route path="products" element={<ProductList />}></Route>
+          <Route path="products" element={<Products />}></Route>
           <Route path="*" element={<PageNotFound />}></Route>
         </Routes>
       </div>

@@ -1,4 +1,5 @@
 import apiClient from "../../api/ApiClient";
+import IRequestError from "../../models/request.error";
 import IUser, { IUserLogin } from "../../models/user.model";
 import { ActionNames } from "../actionNames"
 import CommonActions from "../common/common.actions";
@@ -14,7 +15,7 @@ export interface IUserActions {
     loadUserFromStore: VoidAction
 }
 
-const login = (userLogin: IUserLogin) => {
+const login = (userLogin: IUserLogin) => {  
     return function (dispatch: Function, getState: Function) {
         dispatch(CommonActions.httpRequestsInStart());
 
@@ -23,8 +24,10 @@ const login = (userLogin: IUserLogin) => {
                 dispatch(CommonActions.httpRequestsInEnd());
                 dispatch(loginUser(user));
                 dispatch(saveUser(user));
-            }).catch(err => {
-                throw err;
+            }).catch((err: Error) => {
+                dispatch(CommonActions.httpRequestsInEnd());
+                const reqError: IRequestError = { error: err.message }
+                dispatch(CommonActions.raiseRequestError(reqError));
             });
     }
 }
