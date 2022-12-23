@@ -41,11 +41,17 @@ export const get = async<TResponse>(path: string): Promise<TResponse> => {
     return response.data;
 }
 
+export const deleteRequest = async<TResponse>(path: string): Promise<TResponse> => {
+    const response = await client.delete<TResponse>(path);
+    return response.data;
+}
+
 const HttpClient: IHttpClient = {
     get: get,
     post: post,
     put: put,
-    patch: patch
+    patch: patch,
+    delete: deleteRequest
 }
 
 export default HttpClient;

@@ -13,6 +13,12 @@ const user = getItemFromStorage("user");
 
 const initialState: AppState = {
     productState: {
+        editProduct: {
+            id: 0,
+            name: "",
+            price: 0,
+            image: ""
+        },
         products: []
         // products: [
         //     {

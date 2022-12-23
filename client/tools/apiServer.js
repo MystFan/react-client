@@ -44,12 +44,20 @@ server.use((req, res, next) => {
   next();
 });
 
-server.post("/product/", function(req, res, next) {
-  const error = validateProject(req.body);
+server.post("/product", function(req, res, next) {
+  const error = validateProduct(req.body);
   if (error) {
     res.status(400).send(error);
   } else {
-    req.body.slug = createSlug(req.body.title); // Generate a slug for new courses.
+    next();
+  }
+});
+
+server.put("/product/:id", function(req, res, next) {
+  const error = validateProduct(req.body);
+  if (error) {
+    res.status(400).send(error);
+  } else {
     next();
   }
 });
@@ -65,15 +73,8 @@ server.listen(port, () => {
 
 // Centralized logic
 
-// Returns a URL friendly slug
-function createSlug(value) {
-  return value
-    .replace(/[^a-z0-9_]+/gi, "-")
-    .replace(/^-|-$/g, "")
-    .toLowerCase();
-}
-
-function validateProject(project) {
-  if (!project.title) return "Title is required.";
+function validateProduct(product) {
+  if (!product.name) return "Name is required.";
+  if (!product.image) return "Image is required.";
   return "";
 }

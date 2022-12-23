@@ -5,16 +5,18 @@ import { bindActionCreators } from 'redux';
 import { useStyletron } from 'baseui';
 import { Avatar } from 'baseui/avatar';
 import { CustomColumn, RowAction, StatefulDataTable, StringColumn } from 'baseui/data-table';
-import { FaEdit } from 'react-icons/fa';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
 import IProduct from '../../models/product.model';
-import ProductActions, { ThunkLoadProductsFunction } from '../../store/products/product.actions';
+import ProductActions, { ThunkDeleteProductFunction, ThunkLoadProductsFunction } from '../../store/products/product.actions';
 import { AppState } from '../../store/appState';
 import ProductEdit from './ProductEdit';
+import { Button, KIND, SHAPE, SIZE } from 'baseui/button';
 
 type ProductsProps = {
     products: IProduct[],
-    loadProducts: ThunkLoadProductsFunction
+    loadProducts: ThunkLoadProductsFunction,
+    deleteProduct: ThunkDeleteProductFunction
 };
 
 type RowData = {
@@ -52,14 +54,37 @@ const Products = (props: ProductsProps) => {
                 setIsEdit(true);
             },
             renderIcon: FaEdit
+        },
+        {
+            label: 'Delete',
+            onClick: ({ row }) => {
+                const product: IProduct = { ...row.data.product };
+                props.deleteProduct(product);
+            },
+            renderIcon: FaTrash
         }
     ];
+
+    const handleAdd = () => {
+        setIsEdit(true);
+        setEditProduct(newProduct)
+    }
 
     return (
         <>
             <h1 className={css({ paddingLeft: "10px" })}>Products</h1>
             <div className={css({ height: "700px", maxHeight: '700px', paddingLeft: "10px", paddingRight: "10px" })}>
+                <Button
+                    onClick={() => handleAdd()}
+                    kind={KIND.primary}
+                    size={SIZE.default}
+                    shape={SHAPE.default}
+                >
+                    Add
+                </Button>
                 <StatefulDataTable
+                    filterable={false}
+                    resizableColumnWidths={true}
                     columns={columns}
                     rowActions={rowActions}
                     rowHeight={64}
@@ -81,10 +106,10 @@ function mapStateToProps(state: AppState, ownProps: any) {
 
 function mapDispatchToProps(dispatch: any) {
     return {
-        loadProducts: bindActionCreators(ProductActions.loadProducts, dispatch)
+        loadProducts: bindActionCreators(ProductActions.loadProducts, dispatch),
+        deleteProduct: bindActionCreators(ProductActions.deleteProduct, dispatch)
     };
 }
-
 
 const columns = [
     StringColumn({

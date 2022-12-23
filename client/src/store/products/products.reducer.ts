@@ -4,7 +4,8 @@ import initialState from "../appState"
 import { IAction } from "../createAction"
 
 export type ProductsState = {
-    products: IProduct[]
+    products: IProduct[],
+    editProduct: IProduct
 }
 
 const productsReducer = (state: ProductsState = initialState.productState, action: IAction<string, any>): ProductsState => {
@@ -21,10 +22,30 @@ const productsReducer = (state: ProductsState = initialState.productState, actio
                 ...state,
                 products: state.products.concat(newProduct),
             }
-        case ActionNames.REMOVE_PRODUCT:
+        case ActionNames.UPDATE_PRODUCT:
+            const products: IProduct[] = state.products
+                .map((product: IProduct) => {
+                    return { ...product };
+                })
+                .map((product: IProduct) => {
+                    if (product.id === action.payload.id) {
+                        product.id = action.payload.id;
+                        product.name = action.payload.name;
+                        product.image = action.payload.image;
+                        product.price = action.payload.price;
+                    }
+
+                    return product;
+                });
+
+            return {
+                ...state,
+                products: products
+            }
+        case ActionNames.DELETE_PRODUCT:
             const updatedProducts: IProduct[] = state.products.filter(
                 product => product.id !== action.payload.id
-            )
+            );
 
             return {
                 ...state,
@@ -32,13 +53,13 @@ const productsReducer = (state: ProductsState = initialState.productState, actio
             }
 
         case ActionNames.LOAD_PRODUCTS:
-            const products: IProduct[] = action.payload.map((product: IProduct) => {
+            const allProducts: IProduct[] = action.payload.map((product: IProduct) => {
                 return { ...product };
             });
 
             return {
                 ...state,
-                products: products
+                products: allProducts
             }
     }
 
